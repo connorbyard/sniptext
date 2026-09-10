@@ -17,13 +17,8 @@ jobs:
          - name: Install Odin
            shell: powershell
            run: |
-              Invoke-WebRequest `
-                -Uri "https://github.com/odin-lang/Odin/releases/latest/download/odin-windows-amd64.zip" `
-                -OutFile "odin.zip"
-
-              Expand-Archive odin.zip -DestinationPath odin
-
-              echo "$PWD\odin" >> $env:GITHUB_PATH
+              scoop bucket add versions
+              scoop install versions/odin-nightly
 
          - name: Build Sniptext
            shell: powershell
