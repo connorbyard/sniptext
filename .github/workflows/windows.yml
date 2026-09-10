@@ -11,19 +11,33 @@ jobs:
       runs-on: windows-2022
 
       steps:
-         - name: Checkout
-           uses: actions/checkout@v4
+         - name: Checkout Sniptext
+           uses: actions/checkout@v5
 
-         - name: Install Odin
-           shell: powershell
+         - name: Checkout Odin
+           uses: actions/checkout@v5
+           with:
+              repository: odin-lang/Odin
+              path: odin
+              lfs: true
+
+         - name: Build Odin
+           shell: cmd
            run: |
-              scoop bucket add versions
-              scoop install versions/odin-nightly
+              call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+              cd odin
+              call build.bat 1
+
+         - name: Check Odin
+           shell: cmd
+           run: |
+              odin\odin.exe version
 
          - name: Build Sniptext
-           shell: powershell
+           shell: cmd
            run: |
-              odin build src -out:sniptext.exe
+              call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+              odin\odin.exe build src -out:sniptext.exe
 
          - name: Upload executable
            uses: actions/upload-artifact@v4
